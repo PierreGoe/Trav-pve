@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
+const route = useRoute();
 const MAXX = 20;
 const MAXY = 20;
+
+function pushWithParams(params: {}) {
+  router.push({ name: "ValleyMap", params });
+}
 
 type Tules = {
   id: string;
@@ -31,13 +38,13 @@ function createAllTules(): Tules[] {
 }
 const allTules = createAllTules();
 
-function searchInAllTules(X, Y): Tules[] {
+function searchInAllTules(X: number, Y: number): Tules[] {
   return allTules.filter((tule) => {
     return tule.id.includes(`[${X},${Y}]`);
   });
 }
 
-function getMapCenterInCoor(xStart, yStart): Tules[] {
+function getMapCenterInCoor(xStart: number, yStart: number): Tules[] {
   let map: Tules[] = [];
 
   for (let indexY = 2; indexY >= -2; indexY--) {
@@ -83,6 +90,7 @@ const disabled = ref(false);
 
 <template>
   <div class="greetings">
+    {{ route }}----{{ router }}
     <h1 class="green">The MAP !</h1>
     <div id="container-map">
       <v-btn
@@ -110,6 +118,7 @@ const disabled = ref(false);
             :class="{ appear: disabled, isMyVillage: line.isMyVillage }"
             v-for="(line, id) in map.tules"
             :key="id"
+            @click="pushWithParams({ id: line.id })"
           >
             <img
               v-if="line.isVillage"

@@ -22,6 +22,11 @@ const router = createRouter({
       name: "WorldMap",
       component: () => import("../views/WorldMapView.vue"),
     },
+    {
+      path: "/valley/:id",
+      name: "ValleyMap",
+      component: () => import("../views/ValleyView.vue"),
+    },
   ],
 });
 
