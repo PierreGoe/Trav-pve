@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive, ref } from "vue";
+const MAXX = 20;
+const MAXY = 20;
 
 type Tules = {
   id: string;
@@ -11,12 +13,11 @@ type Tules = {
 
 let initPositionX = reactive({ count: 0 });
 let initPositionY = reactive({ count: 0 });
-let testRed = 'red';
 
 function createAllTules(): Tules[] {
   const tules: Tules[] = [];
-  for (let x = -20; x < 20; x++) {
-    for (let y = -20; y < 20; y++) {
+  for (let x = -MAXX; x < MAXX; x++) {
+    for (let y = -MAXY; y < MAXY; y++) {
       tules.push({
         id: `[${x},${y}]`,
         x,
@@ -50,60 +51,60 @@ function getMapCenterInCoor(xStart, yStart): Tules[] {
 let map = reactive({ tules: getMapCenterInCoor(0, 0) });
 
 function MoveRight() {
-  initPositionX.count += 1;
+  initPositionX.count < MAXX - 3
+    ? (initPositionX.count += 1)
+    : initPositionX.count;
   map.tules = getMapCenterInCoor(initPositionX.count, initPositionY.count);
-  warnDisabled();
 }
 
 function MoveLeft() {
-  initPositionX.count -= 1;
+  initPositionX.count > -MAXX + 3
+    ? (initPositionX.count -= 1)
+    : initPositionX.count;
   map.tules = getMapCenterInCoor(initPositionX.count, initPositionY.count);
-  warnDisabled();
 }
 
 function MoveUp() {
-  initPositionY.count += 1;
+  initPositionY.count < MAXY - 3
+    ? (initPositionY.count += 1)
+    : initPositionY.count;
   map.tules = getMapCenterInCoor(initPositionX.count, initPositionY.count);
-  warnDisabled();
 }
 
 function MoveDown() {
-  initPositionY.count -= 1;
+  initPositionY.count > -MAXY + 3
+    ? (initPositionY.count -= 1)
+    : initPositionY.count;
   map.tules = getMapCenterInCoor(initPositionX.count, initPositionY.count);
-  warnDisabled();
 }
 
 const disabled = ref(false);
-
-function warnDisabled() {
-  disabled.value = true;
-  setTimeout(() => {
-    disabled.value = false;
-  }, 1500);
-}
 </script>
 
 <template>
   <div class="greetings">
     <h1 class="green">The MAP !</h1>
-
     <div id="container-map">
       <v-btn
         variant="outlined"
         prepend-icon="mdi-vuetify"
         class="up-btn"
         @click="MoveUp"
-        >Up</v-btn
-      >
-      <div class="d-flex">
+        icon="mdi-arrow-up-bold-circle-outline"
+        color="info"
+        size="large"
+      ></v-btn>
+      <div class="d-flex align-center">
         <v-btn
           variant="outlined"
           prepend-icon="mdi-vuetify"
           class="left-btn"
           @click="MoveLeft"
-          >Left</v-btn
-        >
-        <div id="map" class="grid-container">
+          icon="mdi-arrow-left-bold-circle-outline"
+          color="info"
+          size="large"
+        ></v-btn>
+        <div id="map" class="grid-container ma-4">
           <div
             class="grid-item"
             :class="{ appear: disabled, isMyVillage: line.isMyVillage }"
@@ -123,21 +124,30 @@ function warnDisabled() {
           prepend-icon="mdi-vuetify"
           class="right-btn"
           @click="MoveRight"
-          >Right</v-btn
-        >
+          icon="mdi-arrow-right-bold-circle-outline"
+          color="info"
+          size="large"
+        ></v-btn>
       </div>
       <v-btn
         variant="outlined"
         prepend-icon="mdi-vuetify"
         class="down-btn"
         @click="MoveDown"
-        >Down</v-btn
-      >
+        icon="mdi-arrow-down-bold-circle-outline"
+        color="info"
+        size="large"
+      ></v-btn>
     </div>
   </div>
 </template>
 
 <style>
+#container-map {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .grid-container {
   grid-area: map;
   display: grid;
@@ -150,23 +160,5 @@ function warnDisabled() {
   width: 96px;
   height: 96px;
   text-align: center;
-}
-
-.appear {
-  animation: Appear 0.1s ease 0s 1 normal forwards;
-}
-
-@keyframes Appear {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-.myVillage {
-  outline: 1px solid v-bind(testRed);
-  z-index: 2;
 }
 </style>
