@@ -161,4 +161,8 @@ const disabled = ref(false);
   height: 96px;
   text-align: center;
 }
+.isMyVillage {
+  outline: 0.1rem solid goldenrod;
+  z-index: 2;
+}
 </style>
