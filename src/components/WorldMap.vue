@@ -1,153 +1,125 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { reactive, ref } from "vue";
-import { useRouter, useRoute } from "vue-router";
-const router = useRouter();
-const route = useRoute();
-const MAXX = 20;
+import { useRouter } from "vue-router";
+import type { Tiles } from "../modeles/Tiles";
+import { useWorldMapStore } from "../stores/worldMap";
 const MAXY = 20;
+const MAXX = 20;
+const worldMapStore = useWorldMapStore();
+worldMapStore.initWorldMap(MAXX, MAXY);
+const { worldMap } = storeToRefs(worldMapStore);
+const router = useRouter();
 
-function pushWithParams(params: {}) {
-  router.push({ name: "ValleyMap", params });
+function goToValley(id: string) {
+  router.push(`/valley/${id}`);
 }
-
-type Tules = {
-  id: string;
-  x: number;
-  y: number;
-  isVillage: boolean;
-  isMyVillage: boolean;
-};
 
 let initPositionX = reactive({ count: 0 });
 let initPositionY = reactive({ count: 0 });
 
-function createAllTules(): Tules[] {
-  const tules: Tules[] = [];
-  for (let x = -MAXX; x < MAXX; x++) {
-    for (let y = -MAXY; y < MAXY; y++) {
-      tules.push({
-        id: `[${x},${y}]`,
-        x,
-        y,
-        isVillage: (x === 0 && y === 0) || Math.random() < 0.05 ? true : false,
-        isMyVillage: x === 0 && y === 0,
-      });
-    }
-  }
-  return tules;
-}
-const allTules = createAllTules();
-
-function searchInAllTules(X: number, Y: number): Tules[] {
-  return allTules.filter((tule) => {
-    return tule.id.includes(`[${X},${Y}]`);
+function searchInAllTiles(X: number, Y: number) {
+  return worldMap.value.tiles.filter((tile) => {
+    return tile.id.includes(`[${X},${Y}]`);
   });
 }
 
-function getMapCenterInCoor(xStart: number, yStart: number): Tules[] {
-  let map: Tules[] = [];
+function getMapCenterInCoor(xStart: number, yStart: number): Tiles[] {
+  let map: Tiles[] = [];
 
   for (let indexY = 2; indexY >= -2; indexY--) {
     for (let indexX = -2; indexX <= 2; indexX++) {
-      map.push(...searchInAllTules(xStart + indexX, yStart + indexY));
+      map.push(...searchInAllTiles(xStart + indexX, yStart + indexY));
     }
   }
 
   return map;
 }
-let map = reactive({ tules: getMapCenterInCoor(0, 0) });
+let map = reactive({ tiles: getMapCenterInCoor(0, 0) });
 
 function MoveRight() {
   initPositionX.count < MAXX - 3
     ? (initPositionX.count += 1)
     : initPositionX.count;
-  map.tules = getMapCenterInCoor(initPositionX.count, initPositionY.count);
+  map.tiles = getMapCenterInCoor(initPositionX.count, initPositionY.count);
 }
 
 function MoveLeft() {
   initPositionX.count > -MAXX + 3
     ? (initPositionX.count -= 1)
     : initPositionX.count;
-  map.tules = getMapCenterInCoor(initPositionX.count, initPositionY.count);
+  map.tiles = getMapCenterInCoor(initPositionX.count, initPositionY.count);
 }
 
 function MoveUp() {
   initPositionY.count < MAXY - 3
     ? (initPositionY.count += 1)
     : initPositionY.count;
-  map.tules = getMapCenterInCoor(initPositionX.count, initPositionY.count);
+  map.tiles = getMapCenterInCoor(initPositionX.count, initPositionY.count);
 }
 
 function MoveDown() {
   initPositionY.count > -MAXY + 3
     ? (initPositionY.count -= 1)
     : initPositionY.count;
-  map.tules = getMapCenterInCoor(initPositionX.count, initPositionY.count);
+  map.tiles = getMapCenterInCoor(initPositionX.count, initPositionY.count);
 }
 
 const disabled = ref(false);
 </script>
 
 <template>
-  <div class="greetings">
-    {{ route }}----{{ router }}
-    <h1 class="green">The MAP !</h1>
-    <div id="container-map">
+  <div id="container-map">
+    <v-btn
+      variant="outlined"
+      prepend-icon="mdi-vuetify"
+      class="up-btn"
+      @click="MoveUp"
+      icon="mdi-arrow-up-bold-circle-outline"
+      color="info"
+      size="large"
+    ></v-btn>
+    <div class="d-flex align-center">
       <v-btn
         variant="outlined"
         prepend-icon="mdi-vuetify"
-        class="up-btn"
-        @click="MoveUp"
-        icon="mdi-arrow-up-bold-circle-outline"
+        class="left-btn"
+        @click="MoveLeft"
+        icon="mdi-arrow-left-bold-circle-outline"
         color="info"
         size="large"
       ></v-btn>
-      <div class="d-flex align-center">
-        <v-btn
-          variant="outlined"
-          prepend-icon="mdi-vuetify"
-          class="left-btn"
-          @click="MoveLeft"
-          icon="mdi-arrow-left-bold-circle-outline"
-          color="info"
-          size="large"
-        ></v-btn>
-        <div id="map" class="grid-container ma-4">
-          <div
-            class="grid-item"
-            :class="{ appear: disabled, isMyVillage: line.isMyVillage }"
-            v-for="(line, id) in map.tules"
-            :key="id"
-            @click="pushWithParams({ id: line.id })"
-          >
-            <img
-              v-if="line.isVillage"
-              src="./../assets/map/village.png"
-              alt=""
-            />
-            <img v-else src="./../assets/map/grass.png" alt="" />
-          </div>
+      <div id="map" class="grid-container ma-4">
+        <div
+          class="grid-item"
+          :class="{ appear: disabled, isMyVillage: line.isMyVillage }"
+          v-for="(line, id) in map.tiles"
+          :key="id"
+          @click="goToValley(line.id)"
+        >
+          <img v-if="line.isVillage" src="./../assets/map/village.png" alt="" />
+          <img v-else src="./../assets/map/grass.png" alt="" />
         </div>
-        <v-btn
-          variant="outlined"
-          prepend-icon="mdi-vuetify"
-          class="right-btn"
-          @click="MoveRight"
-          icon="mdi-arrow-right-bold-circle-outline"
-          color="info"
-          size="large"
-        ></v-btn>
       </div>
       <v-btn
         variant="outlined"
         prepend-icon="mdi-vuetify"
-        class="down-btn"
-        @click="MoveDown"
-        icon="mdi-arrow-down-bold-circle-outline"
+        class="right-btn"
+        @click="MoveRight"
+        icon="mdi-arrow-right-bold-circle-outline"
         color="info"
         size="large"
       ></v-btn>
     </div>
+    <v-btn
+      variant="outlined"
+      prepend-icon="mdi-vuetify"
+      class="down-btn"
+      @click="MoveDown"
+      icon="mdi-arrow-down-bold-circle-outline"
+      color="info"
+      size="large"
+    ></v-btn>
   </div>
 </template>
 
