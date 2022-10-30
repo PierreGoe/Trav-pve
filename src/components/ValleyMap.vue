@@ -7,6 +7,7 @@
   >
     <div>{{ tile }}</div>
   </div>
+  {{ production }}
 </template>
 
 <script setup lang="ts">
@@ -20,4 +21,5 @@ const indexOfValley = worldMapStore.worldMap.tiles.findIndex((valley) => {
   return valley.id.includes(IDtiles);
 });
 const valley = worldMapStore.worldMap.tiles[indexOfValley];
+const production = worldMapStore.getProductionOfTiles(indexOfValley);
 </script>

@@ -1,26 +1,17 @@
-<template>
-  <v-app>
-    <v-main>
-      <router-view />
-    </v-main>
-  </v-app>
-</template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "App",
-
-  data() {
-    return {
-      //
-    };
-  },
-});
+<script setup lang="ts">
+import ressourcesHeader from "./components/RessourcesHeader.vue";
 </script>
 <style>
 .v-main {
   background: darkslategrey;
 }
 </style>
+
+<template>
+  <v-app>
+    <v-main>
+      <ressourcesHeader />
+      <router-view />
+    </v-main>
+  </v-app>
+</template>

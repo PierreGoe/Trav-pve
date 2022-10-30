@@ -4,5 +4,14 @@ export interface Tiles {
   y: number;
   isVillage: boolean;
   isMyVillage: boolean;
-  templateValley: object;
+  templateValley: templateValley;
+}
+
+interface templateValley {
+  [key: string]: ValleySlot;
+}
+interface ValleySlot {
+  id: number;
+  type: string;
+  level: number;
 }

@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import type { Production } from "../modeles/Ressources";
 import type { Tiles } from "../modeles/Tiles";
 import type { WorldMap } from "../modeles/WorldMap";
 
@@ -31,11 +32,11 @@ export const useWorldMapStore = defineStore("worldMap", () => {
           isMyVillage,
           isVillage: isMyVillage || Math.random() < 0.05 ? true : false,
           templateValley: {
-            1: { id: 1, type: "crops", level: 0 },
-            2: { id: 2, type: "wood", level: 0 },
-            3: { id: 3, type: "stone", level: 0 },
-            4: { id: 4, type: "iron", level: 0 },
-            5: { id: 5, type: "gold", level: 0 },
+            1: { id: 1, type: "crops", level: 1 },
+            2: { id: 2, type: "wood", level: 1 },
+            3: { id: 3, type: "stone", level: 1 },
+            4: { id: 4, type: "stone", level: 1 },
+            5: { id: 5, type: "gold", level: 1 },
           },
         });
       }
@@ -43,5 +44,34 @@ export const useWorldMapStore = defineStore("worldMap", () => {
     worldMap.value.tiles = tiles;
   }
 
-  return { worldMap, addTiles, cleanWorld, initWorldMap };
+  function getProductionOfTiles(id: number): Production {
+    const tile = worldMap.value.tiles[id];
+    const productionTiles: Production = {
+      crops: 0,
+      wood: 0,
+      stone: 0,
+      gold: 0,
+    };
+    if (tile) {
+      Object.keys(tile.templateValley).forEach((element) => {
+        switch (tile.templateValley[element].type) {
+          case "crops":
+            productionTiles.crops += tile.templateValley[element].level;
+            break;
+          case "wood":
+            productionTiles.wood += tile.templateValley[element].level;
+            break;
+          case "stone":
+            productionTiles.stone += tile.templateValley[element].level;
+            break;
+          case "gold":
+            productionTiles.gold += tile.templateValley[element].level;
+            break;
+        }
+      });
+    }
+    return productionTiles;
+  }
+
+  return { worldMap, addTiles, cleanWorld, initWorldMap, getProductionOfTiles };
 });
