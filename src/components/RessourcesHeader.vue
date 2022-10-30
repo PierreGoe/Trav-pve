@@ -18,9 +18,12 @@ let production: Production = {
 setInterval(() => {
   ressourcesStore.addRessources(production);
 }, 1000);
+
+
 </script>
 <template>
   <div id="containerRessources">
+    {{ ressourcesStore.test }}
     <ul>
       <li v-for="(ressource, key) in ressourcesStore.ressources" :key="key">
         <v-icon>{{ ressource.icon }}</v-icon>

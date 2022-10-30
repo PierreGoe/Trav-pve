@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ressourcesHeader from "./components/RessourcesHeader.vue";
+import ResetButton from "./components/ResetButton.vue";
 </script>
 <style>
 .v-main {
@@ -10,6 +11,7 @@ import ressourcesHeader from "./components/RessourcesHeader.vue";
 <template>
   <v-app>
     <v-main>
+      <ResetButton />
       <ressourcesHeader />
       <router-view />
     </v-main>
