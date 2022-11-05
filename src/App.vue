@@ -5,6 +5,7 @@ import ResetButton from "./components/ResetButton.vue";
 <style>
 .v-main {
   background: darkslategrey;
+  min-width: 320px;
 }
 </style>
 

@@ -1,18 +1,20 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { useProductionStore } from "./production";
 import type { Ressources, Production } from "../modeles/Ressources";
 
 export const useRessourcesStore = defineStore("ressources", () => {
+  const { production } = useProductionStore();
   const ressources = ref<Ressources>({
-    wood: { value: 100, icon: "mdi-tree", color: "green", name: "Bois" },
+    wood: { value: 100, icon: "mdi-tree", color: "green", name: "wood" },
     stone: {
       value: 600,
       icon: "mdi-image-filter-hdr",
       color: "grey",
-      name: "Pierre",
+      name: "stone",
     },
-    gold: { value: 400, icon: "mdi-gold", color: "yellow", name: "Or" },
-    crops: { value: 800, icon: "mdi-food", color: "green", name: "Nourriture" },
+    gold: { value: 400, icon: "mdi-gold", color: "yellow", name: "gold" },
+    crops: { value: 800, icon: "mdi-food", color: "green", name: "crops" },
   });
 
   function addRessources(ressourcesToAdd: Production) {
@@ -53,5 +55,12 @@ export const useRessourcesStore = defineStore("ressources", () => {
     ressources.value.crops.value = 800;
     sendtolocalStorage();
   }
+
+  setInterval(() => {
+    ressources.value.wood.value += production.wood;
+    ressources.value.stone.value += production.stone;
+    ressources.value.gold.value += production.gold;
+    ressources.value.crops.value += production.crops;
+  }, 1000);
   return { ressources, addRessources, removeRessources, resetRessources };
 });

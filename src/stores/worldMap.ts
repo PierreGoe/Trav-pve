@@ -44,6 +44,26 @@ export const useWorldMapStore = defineStore("worldMap", () => {
               3: { id: 3, type: "stone", level: 1 },
               4: { id: 4, type: "stone", level: 1 },
               5: { id: 5, type: "gold", level: 1 },
+              6: { id: 6, type: "gold", level: 1 },
+              7: { id: 7, type: "gold", level: 1 },
+              8: { id: 8, type: "gold", level: 1 },
+              9: { id: 9, type: "gold", level: 1 },
+              10: { id: 10, type: "gold", level: 1 },
+              11: { id: 11, type: "gold", level: 1 },
+              12: { id: 12, type: "gold", level: 1 },
+              13: { id: 13, type: "gold", level: 1 },
+              14: { id: 14, type: "gold", level: 1 },
+              15: { id: 15, type: "gold", level: 1 },
+              16: { id: 16, type: "gold", level: 1 },
+              17: { id: 17, type: "gold", level: 1 },
+              18: { id: 18, type: "gold", level: 1 },
+              19: { id: 19, type: "gold", level: 1 },
+              20: { id: 20, type: "gold", level: 1 },
+              21: { id: 21, type: "gold", level: 1 },
+              22: { id: 22, type: "gold", level: 1 },
+              23: { id: 23, type: "gold", level: 1 },
+              24: { id: 24, type: "gold", level: 1 },
+              25: { id: 25, type: "gold", level: 1 },
             },
           });
         }
@@ -53,8 +73,8 @@ export const useWorldMapStore = defineStore("worldMap", () => {
     }
   }
 
-  function getProductionOfTiles(id: number): Production {
-    const tile = worldMap.value.tiles[id];
+  function getProductionOfTiles(id: string): Production {
+    const tile = worldMap.value.tiles.find((tile) => tile.id === id);
     const productionTiles: Production = {
       crops: 0,
       wood: 0,
