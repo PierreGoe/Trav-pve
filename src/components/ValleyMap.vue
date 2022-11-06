@@ -1,16 +1,13 @@
 <template>
-  <div>{{ worldMapStore.worldMap.tiles[indexOfValley] }}</div>
   <div id="container-valley" class="grid-container">
     <fieldsComponent
       :field="tile"
       class="grid-item"
-      v-for="(tile, id) in valley.templateValley"
+      v-for="(tile, id) in valley?.templateValley"
       :key="id"
       @fieldSelected="getSelectedField"
     />
   </div>
-  <pre>---{{ fieldSelected }}</pre>
-  <pre>{{ production }}</pre>
 </template>
 
 <script setup lang="ts">
@@ -41,6 +38,13 @@ function getSelectedField(payload: any) {
   display: grid;
   grid-template-columns: auto auto auto auto auto;
   justify-content: center;
-  max-width: 576px;
+  align-content: center;
+}
+.grid-item {
+  text-align: center;
+  width: 20vw;
+  max-width: 96px;
+  height: 20vw;
+  max-height: 96px;
 }
 </style>
