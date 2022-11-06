@@ -168,19 +168,19 @@ export const useWorldMapStore = defineStore("worldMap", () => {
     const valleys = ValleysRandom.map((element, id: number) => {
       switch (element) {
         case "crops":
-          return { id: { id, type: "crops", level: 1 } };
+          return { id, type: "crops", level: 1 };
           break;
         case "wood":
-          return { id: { id, type: "wood", level: 1 } };
+          return { id, type: "wood", level: 1 };
           break;
         case "stone":
-          return { id: { id, type: "stone", level: 1 } };
+          return { id, type: "stone", level: 1 };
           break;
         case "gold":
-          return { id: { id, type: "gold", level: 1 } };
+          return { id, type: "gold", level: 1 };
           break;
         case "center":
-          return { id: { id, type: "center", level: 0 } };
+          return { id, type: "center", level: 0 };
           break;
       }
     });
