@@ -8,13 +8,22 @@
       @fieldSelected="getSelectedField"
     />
   </div>
+  <UpgradeBuilding
+    :dialog="dialog"
+    :build="fieldSelected"
+    @cancel="dialog = !dialog"
+    @upgrade="upgradeBuilding"
+  />
 </template>
 
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useWorldMapStore } from "../stores/worldMap";
 import fieldsComponent from "./FieldsComponent.vue";
+import UpgradeBuilding from "./Dialog/UpgradeBuilding.vue";
+import { ref } from "vue";
 
+const dialog = ref(false);
 const worldMapStore = useWorldMapStore();
 const route = useRoute();
 const IDtiles = route.params.id.toString();
@@ -22,10 +31,16 @@ const valley = worldMapStore.worldMap.tiles.find((valley) => {
   return valley.id.includes(IDtiles);
 });
 const production = worldMapStore.getProductionOfTiles(IDtiles);
-let fieldSelected = valley!.templateValley[0];
+let fieldSelected = ref();
 
 function getSelectedField(payload: any) {
-  fieldSelected = payload;
+  fieldSelected.value = payload;
+  //TODO Routing to center Town
+  if (fieldSelected.value.type === "center") {
+    return;
+  }
+
+  dialog.value = !dialog.value;
 }
 </script>
 

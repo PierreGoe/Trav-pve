@@ -107,7 +107,7 @@ export const useWorldMapStore = defineStore("worldMap", () => {
   }
 
   function templateOfValley() {
-    const MAX = 24;
+    const MAX = 25;
     const rangeCrops = { min: 5, max: 15 };
     const rangeWood = { min: 2, max: 8 };
     const rangeStone = { min: 2, max: 8 };
@@ -188,6 +188,20 @@ export const useWorldMapStore = defineStore("worldMap", () => {
     return valleys as unknown as templateValley;
   }
 
+  /**
+   *
+   * @param idWord ID of the word tile
+   * @param idValley ID of the tile in the Valley
+   * @param level new level of the valley
+   */
+  function updateValley(idWord: string, idValley: number, level: number) {
+    const tile = worldMap.value.tiles.find((tile) => tile.id === idWord);
+    if (tile) {
+      tile.templateValley[idValley].level = level;
+      sendtolocalStorage();
+    }
+  }
+
   return {
     worldMap,
     addTiles,
@@ -195,5 +209,6 @@ export const useWorldMapStore = defineStore("worldMap", () => {
     initWorldMap,
     getProductionOfTiles,
     resetWorldMap,
+    updateValley,
   };
 });

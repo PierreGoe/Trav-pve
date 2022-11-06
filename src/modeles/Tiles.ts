@@ -10,7 +10,7 @@ export interface Tiles {
 export interface templateValley {
   [key: number]: ValleySlot;
 }
-interface ValleySlot {
+export interface ValleySlot {
   id: number;
   type: string;
   level: number;

@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { Production } from "../modeles/Ressources";
 import { useWorldMapStore } from "./worldMap";
 
 export const useProductionStore = defineStore("production", () => {
@@ -12,13 +11,14 @@ export const useProductionStore = defineStore("production", () => {
     gold: 0,
   });
 
-  (function getProductionOfBuilding() {
+  function update() {
     const productionFromFields = worldMapStore.getProductionOfTiles("[0,0]");
-    production.value.wood += productionFromFields.wood;
-    production.value.stone += productionFromFields.stone;
-    production.value.crops += productionFromFields.crops;
-    production.value.gold += productionFromFields.gold;
-  })();
+    production.value.wood = productionFromFields.wood;
+    production.value.stone = productionFromFields.stone;
+    production.value.crops = productionFromFields.crops;
+    production.value.gold = productionFromFields.gold;
+  }
+  update();
 
   function returnProdcution(name: string) {
     if (name === "wood") {
@@ -32,5 +32,5 @@ export const useProductionStore = defineStore("production", () => {
     }
   }
 
-  return { production, returnProdcution };
+  return { production, returnProdcution, update };
 });
