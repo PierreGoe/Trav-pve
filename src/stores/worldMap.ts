@@ -94,13 +94,13 @@ export const useWorldMapStore = defineStore("worldMap", () => {
     localStorage.setItem("worldMap", JSON.stringify(worldMap.value));
   }
 
-  function getlocalstorage() {
-    if (localStorage.getItem("worldMap")) {
-      const localStorageState = JSON.parse(localStorage.getItem("worldMap"));
-      worldMap.value = localStorageState;
+  (function getlocalstorage() {
+    //Check if localstorage exist
+    const existLocalStorage = localStorage.getItem("worldMap");
+    if (existLocalStorage) {
+      worldMap.value = JSON.parse(existLocalStorage);
     }
-  }
-  getlocalstorage();
+  })();
 
   function resetWorldMap() {
     cleanWorld();
