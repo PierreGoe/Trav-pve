@@ -61,6 +61,7 @@ export const useRessourcesStore = defineStore("ressources", () => {
     ressources.value.stone.value += production.stone;
     ressources.value.gold.value += production.gold;
     ressources.value.crops.value += production.crops;
+    sendtolocalStorage();
   }, 1000);
   return { ressources, addRessources, removeRessources, resetRessources };
 });
