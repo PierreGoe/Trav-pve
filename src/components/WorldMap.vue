@@ -70,26 +70,22 @@ const disabled = ref(false);
 
 <template>
   <div id="container-map">
-    <v-btn
-      variant="outlined"
-      prepend-icon="mdi-vuetify"
-      class="up-btn"
-      @click="MoveUp"
-      icon="mdi-arrow-up-bold-circle-outline"
-      color="info"
-      size="large"
-    ></v-btn>
+    <div id="toolboxMap">
+      <v-btn small @click="MoveLeft" :disabled="disabled" size="small">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <v-btn small @click="MoveUp" :disabled="disabled" size="small">
+        <v-icon>mdi-arrow-up</v-icon>
+      </v-btn>
+      <v-btn small @click="MoveDown" :disabled="disabled" size="small">
+        <v-icon>mdi-arrow-down</v-icon>
+      </v-btn>
+      <v-btn small @click="MoveRight" :disabled="disabled" size="small">
+        <v-icon>mdi-arrow-right</v-icon>
+      </v-btn>
+    </div>
     <div class="d-flex align-center">
-      <v-btn
-        variant="outlined"
-        prepend-icon="mdi-vuetify"
-        class="left-btn"
-        @click="MoveLeft"
-        icon="mdi-arrow-left-bold-circle-outline"
-        color="info"
-        size="large"
-      ></v-btn>
-      <div id="map" class="grid-container ma-4">
+      <div id="map" class="grid-container mx-2">
         <div
           class="grid-item"
           :class="{ appear: disabled, isMyVillage: line.isMyVillage }"
@@ -101,25 +97,7 @@ const disabled = ref(false);
           <img v-else src="./../assets/map/grass.png" alt="" />
         </div>
       </div>
-      <v-btn
-        variant="outlined"
-        prepend-icon="mdi-vuetify"
-        class="right-btn"
-        @click="MoveRight"
-        icon="mdi-arrow-right-bold-circle-outline"
-        color="info"
-        size="large"
-      ></v-btn>
     </div>
-    <v-btn
-      variant="outlined"
-      prepend-icon="mdi-vuetify"
-      class="down-btn"
-      @click="MoveDown"
-      icon="mdi-arrow-down-bold-circle-outline"
-      color="info"
-      size="large"
-    ></v-btn>
   </div>
 </template>
 
@@ -134,12 +112,19 @@ const disabled = ref(false);
   display: grid;
   grid-template-columns: auto auto auto auto auto;
   justify-content: center;
-  width: 480px;
-  height: 480px;
+  align-content: center;
 }
 .grid-item {
-  width: 96px;
-  height: 96px;
+  text-align: center;
+  width: 20vw;
+  max-width: 96px;
+  height: 20vw;
+  max-height: 96px;
+}
+.grid-item img {
+  width: 20vw;
+  max-width: 96px;
+  aspect-ratio: 1;
   text-align: center;
 }
 .isMyVillage {
