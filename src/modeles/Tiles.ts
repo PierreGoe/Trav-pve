@@ -7,8 +7,8 @@ export interface Tiles {
   templateValley: templateValley;
 }
 
-interface templateValley {
-  [key: string]: ValleySlot;
+export interface templateValley {
+  [key: number]: ValleySlot;
 }
 interface ValleySlot {
   id: number;

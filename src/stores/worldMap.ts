@@ -3,6 +3,7 @@ import { ref } from "vue";
 import type { Production } from "../modeles/Ressources";
 import type { Tiles } from "../modeles/Tiles";
 import type { WorldMap } from "../modeles/WorldMap";
+import type { templateValley } from "../modeles/Tiles";
 
 export const useWorldMapStore = defineStore("worldMap", () => {
   const worldMap = ref<WorldMap>({
@@ -24,13 +25,21 @@ export const useWorldMapStore = defineStore("worldMap", () => {
   }
 
   function initWorldMap(maxX: number, maxY: number) {
-    if (localStorage.getItem("worldMap")) {
-      const localStorageState = JSON.parse(localStorage.getItem("worldMap"));
-      worldMap.value = localStorageState;
+    const localStorageState = localStorage.getItem("worldMap");
+
+    if (localStorageState) {
+      worldMap.value = JSON.parse(localStorageState);
     } else {
       const tiles: Tiles[] = [];
       for (let x = -maxX; x < maxX; x++) {
         for (let y = -maxY; y < maxY; y++) {
+          //get random element in array
+          const templatePosibility = templateOfValley();
+          const template =
+            templatePosibility[
+              Math.floor(Math.random() * templatePosibility.length)
+            ];
+
           const isMyVillage = x === 0 && y === 0 ? true : false;
           tiles.push({
             id: `[${x},${y}]`,
@@ -38,33 +47,12 @@ export const useWorldMapStore = defineStore("worldMap", () => {
             y,
             isMyVillage,
             isVillage: isMyVillage || Math.random() < 0.05 ? true : false,
-            templateValley: {
-              1: { id: 1, type: "crops", level: 1 },
-              2: { id: 2, type: "wood", level: 1 },
-              3: { id: 3, type: "stone", level: 1 },
-              4: { id: 4, type: "stone", level: 1 },
-              5: { id: 5, type: "gold", level: 1 },
-              6: { id: 6, type: "gold", level: 1 },
-              7: { id: 7, type: "gold", level: 1 },
-              8: { id: 8, type: "gold", level: 1 },
-              9: { id: 9, type: "gold", level: 1 },
-              10: { id: 10, type: "gold", level: 1 },
-              11: { id: 11, type: "gold", level: 1 },
-              12: { id: 12, type: "gold", level: 1 },
-              13: { id: 13, type: "gold", level: 1 },
-              14: { id: 14, type: "gold", level: 1 },
-              15: { id: 15, type: "gold", level: 1 },
-              16: { id: 16, type: "gold", level: 1 },
-              17: { id: 17, type: "gold", level: 1 },
-              18: { id: 18, type: "gold", level: 1 },
-              19: { id: 19, type: "gold", level: 1 },
-              20: { id: 20, type: "gold", level: 1 },
-              21: { id: 21, type: "gold", level: 1 },
-              22: { id: 22, type: "gold", level: 1 },
-              23: { id: 23, type: "gold", level: 1 },
-              24: { id: 24, type: "gold", level: 1 },
-              25: { id: 25, type: "gold", level: 1 },
-            },
+            templateValley: generateValley(
+              template.crops,
+              template.wood,
+              template.stone,
+              template.gold
+            ),
           });
         }
       }
@@ -82,19 +70,19 @@ export const useWorldMapStore = defineStore("worldMap", () => {
       gold: 0,
     };
     if (tile) {
-      Object.keys(tile.templateValley).forEach((element) => {
-        switch (tile.templateValley[element].type) {
+      Object.keys(tile.templateValley).forEach((element, id) => {
+        switch (tile.templateValley[id].type) {
           case "crops":
-            productionTiles.crops += tile.templateValley[element].level;
+            productionTiles.crops += tile.templateValley[id].level;
             break;
           case "wood":
-            productionTiles.wood += tile.templateValley[element].level;
+            productionTiles.wood += tile.templateValley[id].level;
             break;
           case "stone":
-            productionTiles.stone += tile.templateValley[element].level;
+            productionTiles.stone += tile.templateValley[id].level;
             break;
           case "gold":
-            productionTiles.gold += tile.templateValley[element].level;
+            productionTiles.gold += tile.templateValley[id].level;
             break;
         }
       });
@@ -116,6 +104,88 @@ export const useWorldMapStore = defineStore("worldMap", () => {
 
   function resetWorldMap() {
     cleanWorld();
+  }
+
+  function templateOfValley() {
+    const MAX = 24;
+    const rangeCrops = { min: 5, max: 15 };
+    const rangeWood = { min: 2, max: 8 };
+    const rangeStone = { min: 2, max: 8 };
+    const rangeGold = { min: 2, max: 8 };
+
+    const templatePosibility = [];
+
+    for (let crops = 0; crops <= MAX; crops++) {
+      for (let wood = 0; wood <= MAX - crops; wood++) {
+        for (let stone = 0; stone <= MAX - crops - wood; stone++) {
+          for (let gold = 0; gold <= MAX - crops - wood - stone; gold++) {
+            if (crops + wood + stone + gold === MAX) {
+              if (crops < rangeCrops.min || crops > rangeCrops.max) continue;
+              if (wood < rangeWood.min || wood > rangeWood.max) continue;
+              if (stone < rangeStone.min || stone > rangeStone.max) continue;
+              if (gold < rangeGold.min || gold > rangeGold.max) continue;
+              templatePosibility.push({ crops, wood, stone, gold });
+            }
+          }
+        }
+      }
+    }
+    return templatePosibility;
+  }
+
+  function generateValley(
+    nbCrops: number,
+    nbWood: number,
+    nbStone: number,
+    nbGold: number
+  ): templateValley {
+    const Valleys = [];
+    const ValleysRandom = [];
+    for (let i = 0; i < nbCrops; i++) {
+      Valleys.push("crops");
+    }
+    for (let i = 0; i < nbWood; i++) {
+      Valleys.push("wood");
+    }
+    for (let i = 0; i < nbStone; i++) {
+      Valleys.push("stone");
+    }
+    for (let i = 0; i < nbGold; i++) {
+      Valleys.push("gold");
+    }
+    const initialLength = Valleys.length;
+    for (let index = 0; index < initialLength; index++) {
+      //Place center
+      if (index === 12) {
+        ValleysRandom.push("center");
+        continue;
+      }
+      //Take random element in array
+      const random = Math.floor(Math.random() * Valleys.length);
+      ValleysRandom.push(...Valleys.splice(random, 1));
+    }
+
+    const valleys = ValleysRandom.map((element, id: number) => {
+      switch (element) {
+        case "crops":
+          return { id: { id, type: "crops", level: 1 } };
+          break;
+        case "wood":
+          return { id: { id, type: "wood", level: 1 } };
+          break;
+        case "stone":
+          return { id: { id, type: "stone", level: 1 } };
+          break;
+        case "gold":
+          return { id: { id, type: "gold", level: 1 } };
+          break;
+        case "center":
+          return { id: { id, type: "center", level: 0 } };
+          break;
+      }
+    });
+
+    return valleys as unknown as templateValley;
   }
 
   return {
