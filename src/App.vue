@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ressourcesHeader from "./components/RessourcesHeader.vue";
-import ResetButton from "./components/ResetButton.vue";
+import ResetButton from "./components/Button/ResetButton.vue";
+import MapButton from "./components/Button/MapButton.vue";
 </script>
 <style>
 .v-main {
@@ -13,6 +14,7 @@ import ResetButton from "./components/ResetButton.vue";
   <v-app>
     <v-main>
       <ResetButton />
+      <MapButton />
       <ressourcesHeader />
       <router-view />
     </v-main>

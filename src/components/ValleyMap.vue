@@ -18,9 +18,6 @@ import fieldsComponent from "./FieldsComponent.vue";
 const worldMapStore = useWorldMapStore();
 const route = useRoute();
 const IDtiles = route.params.id.toString();
-// const idOfValley = worldMapStore.worldMap.tiles.findIndex((valley) => {
-//   return valley.id.includes(IDtiles);
-// });
 const valley = worldMapStore.worldMap.tiles.find((valley) => {
   return valley.id.includes(IDtiles);
 });
