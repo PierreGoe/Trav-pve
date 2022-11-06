@@ -23,8 +23,7 @@ const props = defineProps({
 let hover = ref(false);
 
 const typeOfField = computed(() => {
-  // return props.field.type;
-  return "crops";
+  return props.field.type;
 });
 </script>
 
@@ -34,6 +33,7 @@ const typeOfField = computed(() => {
   width: 100vw;
   min-width: 64px;
   aspect-ratio: 1;
+  background-size: cover;
 }
 .level {
   color: white;
@@ -47,5 +47,14 @@ const typeOfField = computed(() => {
 }
 .crops {
   background-image: url(/src/assets/map/crops.png);
+}
+.wood {
+  background-image: url(/src/assets/map/wood.png);
+}
+.stone {
+  background-image: url(/src/assets/map/stone.png);
+}
+.gold {
+  background-image: url(/src/assets/map/gold.png);
 }
 </style>
