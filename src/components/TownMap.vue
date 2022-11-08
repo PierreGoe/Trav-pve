@@ -12,13 +12,11 @@
       :build="buildSelected"
       @cancel="dialog = !dialog"
     />
-    {{ dialog }}
     <CreateBuilding
       :dialog="dialogCreate"
       :build="buildSelected"
       @cancel="dialogCreate = !dialogCreate"
     />
-    {{ dialogCreate }}
   </div>
 </template>
 
