@@ -79,7 +79,6 @@ const costBuild: matrixBuildCost = {
 };
 function upgradeBuilding() {
   const levelBuilding = props.build.level;
-  console.log(checkForMaxLevel(), checkForRessources());
   if (!checkForMaxLevel()) {
     return;
   }
@@ -87,12 +86,7 @@ function upgradeBuilding() {
     return;
   }
   worldMapStore.updateValley("[0,0]", props.build.id, levelBuilding + 1);
-  console.log({
-    crops: costBuild[levelBuilding].crops,
-    wood: costBuild[levelBuilding].wood,
-    stone: costBuild[levelBuilding].stone,
-    gold: costBuild[levelBuilding].gold,
-  });
+
   ressourcesStore.removeRessources({
     crops: costBuild[levelBuilding].crops,
     wood: costBuild[levelBuilding].wood,
@@ -101,7 +95,6 @@ function upgradeBuilding() {
   });
   productionStore.update();
 
-  console.log("upgrade");
 }
 
 function checkForRessources() {

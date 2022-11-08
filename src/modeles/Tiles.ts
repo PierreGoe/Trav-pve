@@ -14,4 +14,16 @@ export interface ValleySlot {
   id: number;
   type: string;
   level: number;
+  townSlots?: TownSlots;
 }
+
+export interface TownSlots {
+  [key: number]: Building;
+}
+
+type Building = {
+  id: number;
+  type: string | null;
+  level: number | null;
+  isEmpty: boolean;
+};

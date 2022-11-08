@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { Production } from "../modeles/Ressources";
-import type { Tiles } from "../modeles/Tiles";
+import type { Tiles, TownSlots } from "../modeles/Tiles";
 import type { WorldMap } from "../modeles/WorldMap";
 import type { templateValley } from "../modeles/Tiles";
 
@@ -165,6 +165,16 @@ export const useWorldMapStore = defineStore("worldMap", () => {
       ValleysRandom.push(...Valleys.splice(random, 1));
     }
 
+    const townSlots: TownSlots = {};
+    for (let index = 0; index < 25; index++) {
+      townSlots[index] = {
+        id: index,
+        isEmpty: true,
+        type: "empty",
+        level: null,
+      };
+    }
+
     const valleys = ValleysRandom.map((element, id: number) => {
       switch (element) {
         case "crops":
@@ -180,12 +190,23 @@ export const useWorldMapStore = defineStore("worldMap", () => {
           return { id, type: "gold", level: 1 };
           break;
         case "center":
-          return { id, type: "center", level: 0 };
+          return {
+            id,
+            type: "center",
+            level: 0,
+            townSlots,
+          };
           break;
       }
     });
 
     return valleys as unknown as templateValley;
+  }
+
+  function getTown(id: string) {
+    const tile = worldMap.value.tiles.find((tile) => tile.id === id);
+    const town = tile?.templateValley[12].townSlots;
+    return town;
   }
 
   /**
@@ -202,6 +223,16 @@ export const useWorldMapStore = defineStore("worldMap", () => {
     }
   }
 
+  function updateTown(idWord: string, idTown: number, type: string) {
+    const tile = worldMap.value.tiles.find((tile) => tile.id === idWord);
+    if (tile) {
+      tile.templateValley[12].townSlots[idTown].isEmpty = false;
+      tile.templateValley[12].townSlots[idTown].type = type;
+      tile.templateValley[12].townSlots[idTown].level = 1;
+      sendtolocalStorage();
+    }
+  }
+
   return {
     worldMap,
     addTiles,
@@ -210,5 +241,7 @@ export const useWorldMapStore = defineStore("worldMap", () => {
     getProductionOfTiles,
     resetWorldMap,
     updateValley,
+    getTown,
+    updateTown,
   };
 });

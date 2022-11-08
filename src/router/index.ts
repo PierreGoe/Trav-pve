@@ -28,6 +28,14 @@ const router = createRouter({
       },
     },
     {
+      path: "/town/:id",
+      name: "Town",
+      component: () => import("../views/TownView.vue"),
+      meta: {
+        title: "Town",
+      },
+    },
+    {
       name: "NotFound",
       path: "/:pathMatch(.*)*",
       redirect: { name: "WorldMap" },
