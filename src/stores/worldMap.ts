@@ -215,7 +215,7 @@ export const useWorldMapStore = defineStore("worldMap", () => {
    * @param idValley ID of the tile in the Valley
    * @param level new level of the valley
    */
-  function updateValley(idWord: string, idValley: number, level: number) {
+  function upgradeValley(idWord: string, idValley: number, level: number) {
     const tile = worldMap.value.tiles.find((tile) => tile.id === idWord);
     if (tile) {
       tile.templateValley[idValley].level = level;
@@ -233,6 +233,14 @@ export const useWorldMapStore = defineStore("worldMap", () => {
     }
   }
 
+  function upgradeTown(idWord: string, idTown: number, level: number) {
+    const tile = worldMap.value.tiles.find((tile) => tile.id === idWord);
+    if (tile) {
+      tile.templateValley[12].townSlots[idTown].level = level;
+      sendtolocalStorage();
+    }
+  }
+
   return {
     worldMap,
     addTiles,
@@ -240,8 +248,9 @@ export const useWorldMapStore = defineStore("worldMap", () => {
     initWorldMap,
     getProductionOfTiles,
     resetWorldMap,
-    updateValley,
+    upgradeValley,
     getTown,
     updateTown,
+    upgradeTown,
   };
 });

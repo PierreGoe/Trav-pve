@@ -25,18 +25,18 @@
 import { useRessourcesStore } from "../../stores/ressources";
 import { useWorldMapStore } from "../../stores/worldMap";
 import { useProductionStore } from "../../stores/production";
-import type { ValleySlot } from "@/src/modeles/Tiles";
-import type { PropType } from "vue";
 import type { matrixBuildCost } from "@/src/modeles/Cost";
+import { useRoute } from "vue-router";
 
 const worldMapStore = useWorldMapStore();
 const ressourcesStore = useRessourcesStore();
 const productionStore = useProductionStore();
+const route = useRoute();
 const { ressources } = ressourcesStore;
 
 const props = defineProps({
   build: {
-    type: Object as PropType<ValleySlot>,
+    type: Object,
     required: true,
   },
   dialog: {
@@ -85,7 +85,10 @@ function upgradeBuilding() {
   if (!checkForRessources()) {
     return;
   }
-  worldMapStore.updateValley("[0,0]", props.build.id, levelBuilding + 1);
+  //check if player is in valley or town
+  route.path.includes("valley")
+    ? worldMapStore.upgradeValley("[0,0]", props.build.id, levelBuilding + 1)
+    : worldMapStore.upgradeTown("[0,0]", props.build.id, levelBuilding + 1);
 
   ressourcesStore.removeRessources({
     crops: costBuild[levelBuilding].crops,
