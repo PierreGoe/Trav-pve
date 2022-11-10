@@ -15,13 +15,14 @@
     <CreateBuilding
       :dialog="dialogCreate"
       :build="buildSelected"
+      :buildAlreadInTown="buildAlreadInTown"
       @cancel="dialogCreate = !dialogCreate"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useWorldMapStore } from "../stores/worldMap";
 import { useRoute } from "vue-router";
 import buildsComponent from "./BuildsComponent.vue";
@@ -35,6 +36,17 @@ const route = useRoute();
 const worldMapStore = useWorldMapStore();
 const buildingSlots = worldMapStore.getTown(route.params.id.toString());
 let buildSelected = ref();
+
+const buildAlreadInTown = computed(() => {
+  const builds: Array<string> = [];
+  Object.keys(buildingSlots).forEach((key: string) => {
+    if (buildingSlots[key].type !== "empty") {
+      builds.push(buildingSlots[key].type);
+    }
+  });
+
+  return builds;
+});
 
 function getSelectedbuild(payload: any) {
   buildSelected.value = payload;
@@ -60,5 +72,6 @@ function getSelectedbuild(payload: any) {
   max-width: 96px;
   height: 20vw;
   max-height: 96px;
+  cursor: pointer;
 }
 </style>

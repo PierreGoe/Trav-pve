@@ -58,5 +58,6 @@ function getSelectedField(payload: any) {
   max-width: 96px;
   height: 20vw;
   max-height: 96px;
+  cursor: pointer;
 }
 </style>

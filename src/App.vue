@@ -5,7 +5,6 @@ import MapButton from "./components/Button/MapButton.vue";
 </script>
 <style>
 .v-main {
-  background: darkslategrey;
   min-width: 320px;
 }
 </style>

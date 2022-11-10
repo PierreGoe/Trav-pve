@@ -120,6 +120,7 @@ const disabled = ref(false);
   max-width: 96px;
   height: 20vw;
   max-height: 96px;
+  cursor: pointer;
 }
 .grid-item img {
   width: 20vw;

@@ -21,6 +21,10 @@ export interface TownSlots {
   [key: number]: Building;
 }
 
+export type ListBuilding = {
+  [key: number]: Building;
+};
+
 type Building = {
   id: number;
   type: string | null;

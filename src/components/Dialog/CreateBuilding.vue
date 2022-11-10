@@ -9,11 +9,19 @@
 
         <v-card-actions>
           <v-btn color="error" @click="$emit('cancel')">Cancel</v-btn>
-          <v-btn color="primary" @click="createBuilding('barrack')">
+          <v-btn
+            color="primary"
+            @click="createBuilding('barrack')"
+            v-if="!isAlreadyInTown('barrack')"
+          >
             Barrack</v-btn
           >
 
-          <v-btn color="primary" @click="createBuilding('cityHall')">
+          <v-btn
+            color="primary"
+            @click="createBuilding('cityHall')"
+            v-if="!isAlreadyInTown('cityHall')"
+          >
             City Hall</v-btn
           >
         </v-card-actions>
@@ -27,7 +35,6 @@ import { useWorldMapStore } from "../../stores/worldMap";
 import { useProductionStore } from "../../stores/production";
 import { useRoute } from "vue-router";
 
-
 const worldMapStore = useWorldMapStore();
 const ressourcesStore = useRessourcesStore();
 const productionStore = useProductionStore();
@@ -40,12 +47,18 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  buildAlreadInTown: {
+    type: Array,
+    required: true,
+  },
   dialog: {
     type: Boolean,
     required: true,
   },
 });
-
+function isAlreadyInTown(build: string): boolean {
+  return props.buildAlreadInTown.includes(build);
+}
 //TODO Create Matrix of cost for each building
 const buildList = {
   barrack: { crops: 100, wood: 10, stone: 10, gold: 10 },

@@ -94,7 +94,6 @@ function upgradeBuilding() {
     gold: costBuild[levelBuilding].gold,
   });
   productionStore.update();
-
 }
 
 function checkForRessources() {
