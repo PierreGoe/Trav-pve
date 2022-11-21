@@ -1,10 +1,13 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useProductionStore } from "./production";
+import { useArmyStore } from "./army";
 import type { Ressources, Production } from "../modeles/Ressources";
 
 export const useRessourcesStore = defineStore("ressources", () => {
-  const { production } = useProductionStore();
+  const MAXVALUERESSOURCESS = 10000;
+  const production = useProductionStore();
+  const armyStore = useArmyStore();
   const ressources = ref<Ressources>({
     wood: { value: 100, icon: "mdi-tree", color: "green", name: "wood" },
     stone: {
@@ -49,18 +52,40 @@ export const useRessourcesStore = defineStore("ressources", () => {
   getlocalstorage();
 
   function resetRessources() {
-    ressources.value.wood.value = 100;
-    ressources.value.stone.value = 600;
-    ressources.value.gold.value = 400;
+    ressources.value.wood.value = 9999999;
+    ressources.value.stone.value = 9999999;
+    ressources.value.gold.value = 9999999;
     ressources.value.crops.value = 800;
     sendtolocalStorage();
   }
 
   setInterval(() => {
-    ressources.value.wood.value += production.wood;
-    ressources.value.stone.value += production.stone;
-    ressources.value.gold.value += production.gold;
-    ressources.value.crops.value += production.crops;
+    production.update();
+    ressources.value.wood.value < MAXVALUERESSOURCESS
+      ? (ressources.value.wood.value += production.production.wood)
+      : (ressources.value.wood.value = MAXVALUERESSOURCESS);
+    ressources.value.wood.value < 0 ? (ressources.value.wood.value = 0) : null;
+    ressources.value.stone.value < MAXVALUERESSOURCESS
+      ? (ressources.value.stone.value += production.production.stone)
+      : (ressources.value.stone.value = MAXVALUERESSOURCESS);
+    ressources.value.stone.value < 0
+      ? (ressources.value.stone.value = 0)
+      : null;
+    ressources.value.gold.value < MAXVALUERESSOURCESS
+      ? (ressources.value.gold.value += production.production.gold)
+      : (ressources.value.gold.value = MAXVALUERESSOURCESS);
+    ressources.value.gold.value < 0 ? (ressources.value.gold.value = 0) : null;
+    ressources.value.crops.value < MAXVALUERESSOURCESS
+      ? (ressources.value.crops.value += production.production.crops)
+      : (ressources.value.crops.value = MAXVALUERESSOURCESS);
+    ressources.value.crops.value < 0
+      ? (ressources.value.crops.value = 0)
+      : null;
+
+    if (ressources.value.crops.value <= 0) {
+      armyStore.starveArmy();
+    }
+
     sendtolocalStorage();
   }, 1000);
   return { ressources, addRessources, removeRessources, resetRessources };

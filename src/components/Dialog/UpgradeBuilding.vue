@@ -2,19 +2,46 @@
   <div class="text-center">
     <v-dialog v-model="props.dialog" activator="parent">
       <v-card>
-        <v-card-title class="headline"
+        <v-card-title class="headv-chipne"
           >Upgrade building {{ props.build.type }} - Level
           {{ props.build.level }}</v-card-title
         >
         <v-card-text> Next level cost </v-card-text>
         <ul>
-          <li>crops: {{ costBuild[props.build.level].crops }}</li>
-          <li>wood: {{ costBuild[props.build.level].wood }}</li>
-          <li>stone: {{ costBuild[props.build.level].stone }}</li>
-          <li>gold: {{ costBuild[props.build.level].gold }}</li>
+          <v-chip
+            :prepend-icon="ressources.crops.icon"
+            class="headv-chipne text-capitalize"
+          >
+            {{ ressources.crops.name.toString() }} :
+            {{ costBuild[props.build.level].crops }}
+          </v-chip>
+          <v-chip
+            :prepend-icon="ressources.wood.icon"
+            class="headv-chipne text-capitalize"
+          >
+            {{ ressources.wood.name.toString() }} :
+            {{ costBuild[props.build.level].wood }}
+          </v-chip>
+          <v-chip
+            :prepend-icon="ressources.stone.icon"
+            class="headv-chipne text-capitalize"
+          >
+            {{ ressources.stone.name.toString() }} :
+            {{ costBuild[props.build.level].stone }}
+          </v-chip>
+          <v-chip
+            :prepend-icon="ressources.gold.icon"
+            class="headv-chipne text-capitalize"
+          >
+            {{ ressources.gold.name.toString() }} :
+            {{ costBuild[props.build.level].gold }}
+          </v-chip>
         </ul>
+        <BarrackComponent v-if="props.build.type === 'barrack'" />
+        <CityHallComponent v-if="props.build.type === 'cityHall'" />
         <v-card-actions>
           <v-btn color="error" @click="$emit('cancel')">Cancel</v-btn>
+          <v-spacer></v-spacer>
           <v-btn color="primary" @click="upgradeBuilding"> Upgrade</v-btn>
         </v-card-actions>
       </v-card>
@@ -27,6 +54,9 @@ import { useWorldMapStore } from "../../stores/worldMap";
 import { useProductionStore } from "../../stores/production";
 import type { matrixBuildCost } from "@/src/modeles/Cost";
 import { useRoute } from "vue-router";
+import BarrackComponent from "../BarrackComponent.vue";
+import CityHallComponent from "../CityHall.vue";
+import { ref } from "vue";
 
 const worldMapStore = useWorldMapStore();
 const ressourcesStore = useRessourcesStore();
@@ -44,6 +74,12 @@ const props = defineProps({
     required: true,
   },
 });
+let dialog = ref(props.dialog);
+
+function click() {
+  dialog.value = true;
+}
+
 //TODO Create Matrix of cost for each building
 const costBuild: matrixBuildCost = {
   1: {
